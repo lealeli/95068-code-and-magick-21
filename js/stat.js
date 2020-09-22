@@ -54,12 +54,13 @@ window.renderStatistics = function(ctx, names, times) {
   function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
+    let number = Math.floor(Math.random() * (max - min), 1) + min;
+    return number;
   }
 
   for (var i = 0; i < names.length; i++) {
 
-    var lightnessBar = getRandomInt(10, 70);
+    var saturationBar = getRandomInt(0, 100);
 
     ctx.fillText(
       names[i],
@@ -70,7 +71,7 @@ window.renderStatistics = function(ctx, names, times) {
     if (names[i] === 'Вы') {
       ctx.fillStyle = 'red';
     } else
-      ctx.fillStyle = 'hsl(240, 60%,' + lightnessBar + '%)';
+      ctx.fillStyle = 'hsl(240,' + saturationBar + '%, 50%)';
 
     ctx.fillRect(
       CLOUD_X + GAP + TEXT_WIDTH + (BAR_GAP + BAR_WIDTH) * i,
