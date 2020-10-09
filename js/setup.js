@@ -4,25 +4,23 @@ const FIRST_NAME = [`Иван`, `Хуан`, `Себастьян`, `Мария`, 
 const SECOND_NAME = [`да Марья`, `Верон`, `Мирабелла`, `Вальц`, `Онопко`, `Топольницкая`, `Нионго`, `Ирвинг`];
 const COLOR_COAT = [`rgb(101, 137, 164)`, `rgb(241, 43, 107)`, `rgb(146, 100, 161)`, `rgb(56, 159, 117)`, `rgb(215, 210, 55)`, `rgb(0, 0, 0)`];
 const COLOR_EYES = [`black`, `red`, `blue`, `yellow`, `green`];
+const COLOR_FIREBALL = [`#ee4830`, `#30a8ee`, `#5ce6c0`, `#e848d5`, `#e6e848`];
 
-let setupOpen = document.querySelector(`.setup`);
+let setup = document.querySelector(`.setup`);
 
-setupOpen.classList.remove(`hidden`);
 document.querySelector(`.setup-similar`).classList.remove(`hidden`);
 
-let similarListElement = setupOpen.querySelector(`.setup-similar-list`);
+let similarListElement = setup.querySelector(`.setup-similar-list`);
 let similarWizardTemplate = document.querySelector(`#similar-wizard-template`).content.querySelector(`.setup-similar-item`);
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
-  let number = Math.floor(Math.random() * (max - min), 1) + min;
-  return number;
+  return Math.floor(Math.random() * (max - min), 1) + min;
 }
 
 function nameRandom(arrayFirstName, arraySecondName) {
-  let fullName = arrayFirstName[getRandomInt(0, arrayFirstName.length - 1)] + ` ` + arraySecondName[getRandomInt(0, arraySecondName.length - 1)];
-  return fullName;
+  return arrayFirstName[getRandomInt(0, arrayFirstName.length - 1)] + ` ` + arraySecondName[getRandomInt(0, arraySecondName.length - 1)];
 }
 
 function wizardRandom() {
@@ -56,3 +54,62 @@ for (let i = 0; i < wizards.length; i++) {
 
 similarListElement.appendChild(fragment);
 
+let setupOpen = document.querySelector(`.setup-open`);
+let setupClose = setup.querySelector(`.setup-close`);
+let setupUserName = setup.querySelector(`.setup-user-name`);
+
+let onPopupEscPress = function (evt) {
+  if (evt.key === `Escape` && (document.activeElement !== setupUserName)) {
+    evt.preventDefault();
+    closePopup();
+  }
+};
+
+let openPopup = function () {
+  setup.classList.remove(`hidden`);
+
+  document.addEventListener(`keydown`, onPopupEscPress, true);
+};
+
+let closePopup = function () {
+  setup.classList.add(`hidden`);
+
+  document.removeEventListener(`keydown`, onPopupEscPress);
+};
+
+setupOpen.addEventListener(`click`, function () {
+  openPopup();
+});
+
+setupOpen.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    openPopup();
+  }
+});
+
+setupClose.addEventListener(`click`, function () {
+  closePopup();
+});
+
+setupClose.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    closePopup();
+  }
+});
+
+let setupPlayer = document.querySelector(`.setup-player`);
+let setupPlayerCoat = setupPlayer.querySelector(`.wizard-coat`);
+let setupPlayerEyes = setupPlayer.querySelector(`.wizard-eyes`);
+let setupPlayerFireball = document.querySelector(`.setup-fireball-wrap`);
+
+let setupColor = function (player, colorStyle, arrayColor, input) {
+  player.addEventListener(`click`, function () {
+    let param = arrayColor[getRandomInt(0, arrayColor.length - 1)];
+    player.style[colorStyle] = param;
+    input[0].setAttribute(`value`, param);
+  });
+};
+
+setupColor(setupPlayerCoat, `fill`, COLOR_COAT, document.getElementsByName(`coat-color`));
+setupColor(setupPlayerEyes, `fill`, COLOR_EYES, document.getElementsByName(`eyes-color`));
+setupColor(setupPlayerFireball, `backgroundColor`, COLOR_FIREBALL, document.getElementsByName(`fireball-color`));
